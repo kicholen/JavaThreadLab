@@ -1,8 +1,11 @@
 package lab;
 
+import java.awt.Dimension;
+
 import lab.component.Root;
 
 import javax.swing.JFrame;
+import javax.swing.JSlider;
 
 @SuppressWarnings("serial")
 public class RaceSimulationFrame extends JFrame {
@@ -14,6 +17,7 @@ public class RaceSimulationFrame extends JFrame {
 		setLocationRelativeTo(null);
 		setLayout(null);
         add(createRoot());
+        
         setVisible(true);
 	}
 	
@@ -23,7 +27,7 @@ public class RaceSimulationFrame extends JFrame {
 	}
 	
 	 private Root createRoot() {
-		 _root = new Root(getWidth(), getHeight());
+		 _root = new Root(getWidth() * 9 / 10, getHeight() * 9 / 10);
 		 _root.setData();
 		 
 		 return _root;

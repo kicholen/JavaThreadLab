@@ -34,38 +34,42 @@ public class AccelerateThread extends Thread {
         				}
         			}
         		}
-        		
-        		int diff = wasFound ? radToDeg(closestAngle - firstAngle) : radToDeg(degToRad(360) - firstAngle + lowestAngle);
+        		int diff = 0;
+        		if (wasFound) {
+        			diff = radToDeg(closestAngle - firstAngle);
+        		}
+        		else {
+        			diff = radToDeg(degToRad(360) - firstAngle + lowestAngle);
+        		}
         		double vel = _models.get(i).getAngularVelocity();
         		
-        		//if (wasFound) {
-        			if (diff <= 30) {
-        				vel /= 2.0;
-        			}
-        			else if (diff > 30) {
-        				vel += 0.02;
-        			}
-        		//}
-        		//else {
-        		//	vel += 0.02;
-        		//}
+    			if (diff <= 15) {
+    				vel /= 2.0;
+    			}
+    			else if (diff > 15) {
+    				vel += 0.02;
+    			}
+    			
         		_models.get(i).setAngularVelocity(Math.min(Math.max(0.005, vel), _maxSpeed));
     		}
         	
             try {
 				sleep(_updateInterval);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
         } 
+    }
+    
+    public void setMaxSpeed(float value) {
+    	_maxSpeed = value;
     }
     
     public int radToDeg(double rad) {
     	return (int) (rad * 180 / Math.PI);
     }
     
-    public int degToRad(double rad) {
-    	return (int) (rad * 180 / Math.PI);
+    public int degToRad(double deg) {
+    	return (int) (deg * Math.PI / 180);
     }
 }

@@ -1,6 +1,7 @@
 package lab.component;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.ArrayList;
@@ -9,6 +10,9 @@ import java.util.Random;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import lab.factory.ComponentsFactory;
 import lab.model.CarModel;
@@ -23,13 +27,17 @@ public class Root extends JPanel {
 	List<JComponent> _children;
 	List<CarModel> _models;
 	private Circle _circle;
+	AccelerateThread _thread;
 	
 	public Root(int width, int height) {
 		_children = new ArrayList<JComponent>();
 		_models = new ArrayList<CarModel>();
 		
+		addSlider();
+        
 		new RepaintThread(_children).start();
-		new AccelerateThread(_models).start();
+		_thread = new AccelerateThread(_models);
+		_thread.start();
 		setBackground(Color.WHITE);
 		setLayout(new GridBagLayout());
 		setSize(width, height);
@@ -61,6 +69,30 @@ public class Root extends JPanel {
 	private float randomFloat(float min, float max) {
 		Random rand = new Random();
 		return rand.nextFloat() * (max - min) + min;
+	}
+	
+	private void addSlider() {
+		JSlider slider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+		slider.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent ev) {
+				JSlider source = (JSlider)ev.getSource();
+		        if (!source.getValueIsAdjusting()) {
+		            int maxSpeed = source.getValue();
+		            _thread.setMaxSpeed((float)maxSpeed / 1000.0f);
+		        }
+			}
+		
+		});
+		
+        slider.setPreferredSize(new Dimension((int)slider.getX() + 150, (int)slider.getY() + 50));
+        slider.setMinorTickSpacing(20);
+        slider.setMajorTickSpacing(20);
+        slider.setPaintTicks(true);
+        slider.setPaintLabels(true);
+        slider.setLabelTable(slider.createStandardLabels(20));
+        addComponent(slider);
 	}
 	
 	private void addComponent(JComponent component) {
