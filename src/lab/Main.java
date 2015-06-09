@@ -15,6 +15,7 @@ public class Main {
 	}
 
 	private static void createAndShow() {
+		
 		RaceSimulationFrame simulationFrame = new RaceSimulationFrame();
 		simulationFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		simulationFrame.setData(500, 500);
